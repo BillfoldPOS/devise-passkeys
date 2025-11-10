@@ -19,7 +19,7 @@ module WebAuthnTestHelpers
   end
 
   def encode_challenge(raw_challenge: generate_raw_challenge)
-    Base64.strict_encode64(raw_challenge)
+    WebAuthn.configuration.encoder.encode(raw_challenge)
   end
 
   def assertion_from_client(client:, challenge:, user_verified: true)

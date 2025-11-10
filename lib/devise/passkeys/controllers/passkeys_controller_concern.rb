@@ -77,7 +77,7 @@ module Devise
           passkey = resource.passkeys.create!(
             label: passkey_params[:label],
             public_key: @webauthn_credential.public_key,
-            external_id: Base64.strict_encode64(@webauthn_credential.raw_id),
+            external_id: WebAuthn.configuration.encoder.encode(@webauthn_credential.raw_id),
             sign_count: @webauthn_credential.sign_count,
             last_used_at: nil
           )

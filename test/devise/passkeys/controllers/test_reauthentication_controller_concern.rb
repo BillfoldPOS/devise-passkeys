@@ -58,7 +58,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     allowed_passkey_ids = user.passkeys.pluck(:external_id).map do |id|
@@ -86,8 +86,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     sign_in(user)
@@ -122,8 +122,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     sign_in(user)
@@ -158,8 +158,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     sign_in(user)
@@ -193,8 +193,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     sign_in(user)
@@ -230,8 +230,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     sign_in(user)
@@ -267,8 +267,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     sign_in(user)
@@ -304,8 +304,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     sign_in(user)

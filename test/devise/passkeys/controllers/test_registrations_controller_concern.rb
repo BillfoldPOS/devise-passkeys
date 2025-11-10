@@ -124,7 +124,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     assert_equal "test@test.com", user.email
 
     assert_equal "Test", passkey.label
-    assert_equal Base64.strict_encode64(response.credential.id), passkey.external_id
+    assert_equal WebAuthn.configuration.encoder.encode(response.credential.id), passkey.external_id
     refute_nil passkey.public_key
     refute_nil passkey.last_used_at
 
@@ -375,7 +375,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     sign_in(user)
 
     user.passkeys.create!(label: "dummy", external_id: "dummy-passkey",
-                          public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                          public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
 
     post "/registration/reauthenticate"
     refute_nil session["user_current_reauthentication_token"]

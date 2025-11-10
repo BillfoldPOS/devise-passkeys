@@ -28,7 +28,7 @@ class Devise::TestPasskeys < ActiveSupport::TestCase
     assert_equal "Test Key", passkey.label
 
     assert_equal credential.public_key, passkey.public_key
-    assert_equal Base64.strict_encode64(credential.raw_id), passkey.external_id
+    assert_equal WebAuthn.configuration.encoder.encode(credential.raw_id), passkey.external_id
     assert_equal credential.sign_count, passkey.sign_count
     assert_nil passkey.last_used_at
   end
@@ -58,7 +58,7 @@ class Devise::TestPasskeys < ActiveSupport::TestCase
     assert_equal "Test Key", passkey.label
 
     assert_equal credential.public_key, passkey.public_key
-    assert_equal Base64.strict_encode64(credential.raw_id), passkey.external_id
+    assert_equal WebAuthn.configuration.encoder.encode(credential.raw_id), passkey.external_id
     assert_equal 234, passkey.sign_count
     assert_equal registration_time, passkey.last_used_at
   end

@@ -66,8 +66,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     excluded_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -94,7 +94,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -151,7 +151,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     passkey = user.passkeys.last
 
     assert_equal "Test", passkey.label
-    assert_equal Base64.strict_encode64(response.credential.id), passkey.external_id
+    assert_equal WebAuthn.configuration.encoder.encode(response.credential.id), passkey.external_id
     refute_nil passkey.public_key
     assert_nil passkey.last_used_at
 
@@ -168,7 +168,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -216,7 +216,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -264,7 +264,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -304,7 +304,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -343,7 +343,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -384,7 +384,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -436,8 +436,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     excluded_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -458,15 +458,15 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     other_user = User.create!(email: "example@example.com")
 
     passkey = other_user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     excluded_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -485,12 +485,12 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
-                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                                        public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     allowed_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -527,8 +527,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     excluded_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -551,15 +551,15 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     3.times do |n|
       user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
-                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                            public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
     end
 
     other_user = User.create!(email: "example@example.com")
 
     passkey = other_user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     excluded_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -580,12 +580,12 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
-                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                                        public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     allowed_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -613,12 +613,12 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
-                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                                        public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     allowed_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -643,12 +643,12 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
-                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                                        public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     allowed_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]
@@ -677,12 +677,12 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
-                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+                                        public_key: WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
-      external_id: Base64.strict_encode64(credential.id),
-      public_key: Base64.strict_encode64(credential.public_key)
+      external_id: WebAuthn.configuration.encoder.encode(credential.id),
+      public_key: WebAuthn.configuration.encoder.encode(credential.public_key)
     )
 
     allowed_credentials = [{ "type" => "public-key", "id" => passkey.external_id }]

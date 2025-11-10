@@ -25,7 +25,7 @@ class Devise::TestPasskeyIssuer < ActiveSupport::TestCase
     assert_equal "Test Key", passkey.label
 
     assert_equal credential.public_key, passkey.public_key
-    assert_equal Base64.strict_encode64(credential.raw_id), passkey.external_id
+    assert_equal WebAuthn.configuration.encoder.encode(credential.raw_id), passkey.external_id
     assert_equal credential.sign_count, passkey.sign_count
     assert_nil passkey.last_used_at
   end
@@ -55,7 +55,7 @@ class Devise::TestPasskeyIssuer < ActiveSupport::TestCase
     assert_equal "Test Key", passkey.label
 
     assert_equal credential.public_key, passkey.public_key
-    assert_equal Base64.strict_encode64(credential.raw_id), passkey.external_id
+    assert_equal WebAuthn.configuration.encoder.encode(credential.raw_id), passkey.external_id
     assert_equal 234, passkey.sign_count
     assert_equal registration_time, passkey.last_used_at
   end
@@ -67,20 +67,20 @@ class Devise::TestPasskeyCredentialFinder < ActiveSupport::TestCase
 
     user = User.create!(email: "test@test.com")
 
-    encoded_credential_id_1 = Base64.strict_encode64(SecureRandom.random_bytes(32))
-    encoded_credential_id_2 = Base64.strict_encode64(SecureRandom.random_bytes(32))
+    encoded_credential_id_1 = WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(32))
+    encoded_credential_id_2 = WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(32))
 
     passkey_1 = user.passkeys.create!(label: "dummy key", external_id: encoded_credential_id_1, public_key: "abbbcvcc")
     passkey_2 = user.passkeys.create!(label: "dummy key", external_id: encoded_credential_id_2, public_key: "abbbcvcc")
 
     assert_equal passkey_1, finder.find_with_credential_id(encoded_credential_id_1)
     assert_equal passkey_2, finder.find_with_credential_id(encoded_credential_id_2)
-    assert_nil finder.find_with_credential_id(Base64.strict_encode64(SecureRandom.random_bytes(32)))
+    assert_nil finder.find_with_credential_id(WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(32)))
   end
 
   test "find_with_credential_id: no credentials" do
     finder = Devise::Passkeys::PasskeyIssuer::CredentialFinder.new(resource_class: User)
 
-    assert_nil finder.find_with_credential_id(Base64.strict_encode64(SecureRandom.random_bytes(32)))
+    assert_nil finder.find_with_credential_id(WebAuthn.configuration.encoder.encode(SecureRandom.random_bytes(32)))
   end
 end
