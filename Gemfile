@@ -5,6 +5,10 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in devise-passkeys.gemspec
 gemspec
 
+gem "warden-webauthn", ">= 0.3.0",
+    github: "BillfoldPOS/warden-webauthn",
+    branch: "billfold-fixes"
+
 group :development, :test do
   gem "appraisal"
   gem "debug"

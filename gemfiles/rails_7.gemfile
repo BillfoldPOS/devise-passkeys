@@ -2,8 +2,9 @@
 
 source "https://rubygems.org"
 
+gem "warden-webauthn", ">= 0.3.0", github: "BillfoldPOS/warden-webauthn", branch: "billfold-fixes"
 gem "rails", "~> 7"
-gem "sqlite3", "~> 1.4"
+gem "sqlite3", "~> 2.8"
 
 group :development, :test do
   gem "appraisal"
