@@ -15,7 +15,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     attr_accessor :resource
 
     def relying_party
-      WebAuthn::RelyingParty.new(origin: "https://www.example.com")
+      WebAuthn::RelyingParty.new(allowed_origins: ["https://www.example.com"])
     end
 
     def resource_name
@@ -58,7 +58,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#new_create_challenge: signed in" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -86,7 +86,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#create: creates a passkey for the user" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -160,7 +160,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#create: user not verified" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -208,7 +208,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#create: bad challenge" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -256,7 +256,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#create: credential cannot be parsed" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -296,7 +296,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#create: credential missing" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -335,7 +335,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#create: never reauthenticated" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -376,7 +376,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#create: passkey label missing" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -428,7 +428,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#new_destroy_challenge: only 1 passkey" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -450,7 +450,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#new_destroy_challenge: other user passkey" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -478,7 +478,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#new_destroy_challenge: signed in, multiple passkeys" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -519,7 +519,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#destroy: only 1 passkey" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -543,7 +543,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#destroy: other user passkey" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -573,7 +573,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#destroy: success with reauthentication_token" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -606,7 +606,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#destroy: never reauthenticated" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -636,7 +636,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#destroy: failure without reauthentication_token" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -670,7 +670,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
   end
 
   test "#destroy: failure with bad reauthentication_token" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 

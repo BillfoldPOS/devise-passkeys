@@ -10,7 +10,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcern < ActionDispa
     include Devise::Passkeys::Controllers::SessionsControllerConcern
 
     def relying_party
-      WebAuthn::RelyingParty.new(origin: "test.host")
+      WebAuthn::RelyingParty.new(allowed_origins: ["test.host"])
     end
 
     def resource_name
@@ -48,7 +48,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernCustomization 
     include Devise::Passkeys::Controllers::SessionsControllerConcern
 
     def relying_party
-      WebAuthn::RelyingParty.new(origin: "test.host")
+      WebAuthn::RelyingParty.new(allowed_origins: ["test.host"])
     end
 
     def resource_name

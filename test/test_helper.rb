@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'logger'
+require 'ostruct'
+
 Bundler.require(:test)
 SimpleCov.start do
   add_filter "/test/"

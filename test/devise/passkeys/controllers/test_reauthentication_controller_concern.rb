@@ -22,7 +22,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
     end
 
     def relying_party
-      WebAuthn::RelyingParty.new(origin: "https://www.example.com")
+      WebAuthn::RelyingParty.new(allowed_origins: ["https://www.example.com"])
     end
 
     def resource_name
@@ -78,7 +78,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   test "#reauthenticate: success, does not overwrite the CSRF token" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -114,7 +114,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   test "#reauthenticate: user not verified" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -150,7 +150,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   test "#reauthenticate: bad challenge" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -185,7 +185,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   test "#reauthenticate: credential removed" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -222,7 +222,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   test "#reauthenticate: credential cannot be parsed" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -259,7 +259,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   test "#reauthenticate: credential missing" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -296,7 +296,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   test "#reauthenticate: not signed in" do
-    relying_party = example_relying_party(options: { origin: "test.host" })
+    relying_party = example_relying_party(options: { allowed_origins: ["test.host"] })
     client = fake_client
     credential = create_credential(client: client, relying_party: relying_party)
 

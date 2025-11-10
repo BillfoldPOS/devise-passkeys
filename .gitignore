@@ -6,6 +6,8 @@
 /pkg/
 /spec/reports/
 /tmp/
+/vendor/bundle/
+/gemfiles/vendor/bundle/
 .DS_Store
 gemfiles/*.gemfile.lock
 test/rails_app/log/*

@@ -13,7 +13,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     include Devise::Passkeys::Controllers::RegistrationsControllerConcern
 
     def relying_party
-      WebAuthn::RelyingParty.new(origin: "https://www.example.com")
+      WebAuthn::RelyingParty.new(allowed_origins: ["https://www.example.com"])
     end
 
     # Dummy action to setup reauthentication token
@@ -75,7 +75,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: success" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
 
     post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
@@ -133,7 +133,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: user not verified" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
 
     post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
@@ -158,7 +158,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: bad challenge" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
 
     post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
@@ -183,7 +183,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: credential cannot be parsed" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
 
     post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
@@ -204,7 +204,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: credential missing" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
 
     post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
@@ -224,7 +224,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: passkey label missing" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
 
     post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
@@ -247,7 +247,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: non-passkey attribute missing" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
 
     post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
@@ -270,18 +270,19 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: did not complete challenge" do
-    relying_party = example_relying_party(options: { origin: "www.example.com" })
+    relying_party = example_relying_party(options: { allowed_origins: ["www.example.com"] })
     client = fake_client(origin: "https://www.example.com")
 
     raw_credential = client.create(challenge: encode_challenge, user_verified: false)
 
     assert_no_difference "User.count" do
       assert_no_difference "UserPasskey.count" do
-        assert_raises NoMethodError do
-          post "/registration",
-               params: { user: { email: "test@test.com", passkey_label: "Test",
-                                 passkey_credential: raw_credential.to_json } }
-        end
+        post "/registration",
+             params: { user: { email: "test@test.com", passkey_label: "Test",
+                               passkey_credential: raw_credential.to_json } }
+
+        assert_response :bad_request
+        assert_translation_missing_message(translation_key: "en.devise.registrations.webauthn_generic_error")
       end
     end
   end

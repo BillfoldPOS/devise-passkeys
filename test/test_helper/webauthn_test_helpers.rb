@@ -5,7 +5,7 @@ require "webauthn/fake_client"
 module WebAuthnTestHelpers
   def example_relying_party(options: {})
     WebAuthn::RelyingParty.new(**{
-      origin: "https://example.test",
+      allowed_origins: ["https://example.test"],
       name: "Example Relying Party"
     }.merge(options))
   end

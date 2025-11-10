@@ -10,7 +10,7 @@ class Devise::TestPasskeyIssuer < ActiveSupport::TestCase
     user = User.create!(email: "test@test.com")
 
     relying_party = example_relying_party
-    client = fake_client(origin: relying_party.origin)
+    client = fake_client(origin: relying_party.allowed_origins.first)
     credential = create_raw_credential(credential_hash: client.create, relying_party: relying_party)
 
     passkey = Devise::Passkeys::PasskeyIssuer.build.create_and_return_passkey(resource: user, label: "Test Key",
@@ -34,7 +34,7 @@ class Devise::TestPasskeyIssuer < ActiveSupport::TestCase
     user = User.create!(email: "test@test.com")
 
     relying_party = example_relying_party
-    client = fake_client(origin: relying_party.origin)
+    client = fake_client(origin: relying_party.allowed_origins.first)
     credential = create_raw_credential(credential_hash: client.create, relying_party: relying_party)
 
     registration_time = Time.current
