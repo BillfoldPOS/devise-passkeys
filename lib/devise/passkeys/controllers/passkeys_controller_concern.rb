@@ -68,7 +68,7 @@ module Devise
 
         def destroy
           @passkey.destroy
-          redirect_to root_path
+          destroy_redirect
         end
 
         protected
@@ -82,7 +82,7 @@ module Devise
             last_used_at: nil
           )
           yield [resource, passkey] if block_given?
-          redirect_to root_path
+          create_redirect
         end
 
         def exclude_external_ids_for_registration
@@ -139,6 +139,14 @@ module Devise
           delete_registration_challenge
 
           false
+        end
+
+        def create_redirect
+          redirect_to root_path
+        end
+
+        def destroy_redirect
+          redirect_to root_path
         end
       end
     end
